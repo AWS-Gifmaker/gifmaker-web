@@ -1,13 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
-import {Row, Col,Container, InputGroup, FormControl, Button, Form, FormGroup, Jumbotron} from 'react-bootstrap'
+import {Row,Image, Col,Container, InputGroup, FormControl, Button, Form, FormGroup, Jumbotron, Card} from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react'
-
+class GifResponse {
+  name;
+  url;
+}
 function App() {
   const [query, setQuery] = useState("");
   const [name, setName] = useState("");
   const [file, setFile] = useState();
+  const [gifs, setGifs] = useState([])
   const url = `http://localhost:8000`;    
 
   const handleSearch = () => {
@@ -25,11 +29,25 @@ function App() {
       var params = new URLSearchParams();
       tags.length == 1 && params.append("name", tags[0]);
       tags.length != 1 && params.append("tags", tags);
-      const getGifsUrl = url + "/gifs/" + params;
-
+      const getGifsUrl = url + "/gifs?" + params;
+      console.log(getGifsUrl)
       fetch(getGifsUrl, options)
       .then(response => response.json())
-      .then((data) => console.log(data));
+      .then((data) =>{
+        console.log(data)
+        const mappedData = data.gifs.map(x => {
+          const gif = new GifResponse();
+          gif.url = x.image_url.S;
+          gif.name = x.name.S;
+          return gif;
+        });
+        for(let i = 0; i<10; i++)
+        mappedData.push({
+          name: "musk",
+          url: "https://gifmaker-gifs.s3.amazonaws.com/comment_Yr35Jz1xcvEZQQhwAi9cse5MrNpANIfT.gif"
+        });
+        data.gifs ? setGifs(mappedData) : setGifs([]);
+      });
   }
 
   const uploadFile = () => {
@@ -68,6 +86,24 @@ function App() {
     console.log("name " + name);
     console.log("file " + file);
     uploadFile();
+  }
+  const displayGif = (gif) => {
+    console.log(gif);
+    return gif ?
+    <Col sm={3}>
+     <Card style={{width: '15rem', height: '15rem' }}>
+      <Card.Body>
+        <Card.Title>{gif.name}</Card.Title>
+        <div class="container">
+          <div class ="col-md-4 px-0">
+        <Image src={gif.url} fluid />
+          </div>
+        </div>
+      </Card.Body>
+      <Card.Link href={gif.url}>gif</Card.Link>
+    </Card>
+    </Col>
+    : null;
   }
   const isValidForm = file && name;
   return (
@@ -116,6 +152,11 @@ function App() {
               <Button variant="primary" onClick={handleSearch}>Search</Button>
            </InputGroup.Append>
           </InputGroup>
+        </Jumbotron>
+        <Jumbotron>
+          <Row>
+            {gifs.map(x=> displayGif(x))}
+          </Row>
         </Jumbotron>
     </Container>
 </div>
