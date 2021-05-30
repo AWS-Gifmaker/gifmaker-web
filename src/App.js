@@ -3,6 +3,8 @@ import './App.css';
 import {Row,Image, Col,Container, InputGroup, FormControl, Button, Form, FormGroup, Jumbotron, Card} from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react'
+import AWS from 'aws-sdk'
+
 class GifResponse {
   name;
   url;
@@ -12,7 +14,10 @@ function App() {
   const [name, setName] = useState("");
   const [file, setFile] = useState();
   const [gifs, setGifs] = useState([])
-  const url = `http://localhost:8000`;    
+  const env = process.env.REACT_APP_STAGE;
+  console.log("currently in " + env);
+  const getApiUrl = () =>  'https://avl72k250m.execute-api.us-east-1.amazonaws.com/dev';
+  const url =env == 'dev'? `http://localhost:8000`: getApiUrl();    
 
   const handleSearch = () => {
       console.log("searching tags  " + query);
@@ -49,7 +54,6 @@ function App() {
         data.gifs ? setGifs(mappedData) : setGifs([]);
       });
   }
-
   const uploadFile = () => {
     var reader = new FileReader();
     reader.onload = (e) => {
@@ -114,7 +118,7 @@ function App() {
             Upload video and convert it to gif:
           </h3>
         <Form onSubmit={fileUploadSubmit} validated={ file && name} >
-            <Form.Group as={Row} class="mb-3">
+            <Form.Group as={Row} className="mb-3">
               <Form.Label column sm="2">
                 Video
               </Form.Label>
