@@ -1,9 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
-import {Row,Image, Col,Container, InputGroup, FormControl, Button, Form, FormGroup, Jumbotron, Card} from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Row from 'react-bootstrap/Row'
+import Image from 'react-bootstrap/Image'
+import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import Jumbotron from 'react-bootstrap/Jumbotron'
+import Card from 'react-bootstrap/Card'
 import {useState} from 'react'
-import AWS from 'aws-sdk'
 
 class GifResponse {
   name;
