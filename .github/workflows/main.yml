@@ -9,27 +9,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
   steps:
-      # Step 1
-      - name: Install AWS CLI
-        uses: unfor19/install-aws-cli-action@v1
-        with:
-          version: 1
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      # Step 2
-      - name: Download Lambda api.zip
-        uses: actions/download-artifact@v2
-        with:
-          name: api
-      # Step 3
-      - name: Build React App
-        run: npm install && npm run build
-      - name: Deploy app build to S3 bucket
-        run: aws s3 sync ./dist/ s3://gifmaker-website --delete
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+    # Step 1
+    - name: Install AWS CLI
+      uses: unfor19/install-aws-cli-action@v1
+      with:
+        version: 1
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+    # Step 2
+    - name: Download Lambda api.zip
+      uses: actions/download-artifact@v2
+      with:
+        name: api
+    # Step 3
+    - name: Build React App
+      run: npm install && npm run build
+    - name: Deploy app build to S3 bucket
+      run: aws s3 sync ./dist/ s3://gifmaker-website --delete
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
