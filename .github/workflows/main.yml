@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Step 1
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Install AWS CLI
         uses: unfor19/install-aws-cli-action@v1
         with:
