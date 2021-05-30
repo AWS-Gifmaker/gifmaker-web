@@ -15,31 +15,28 @@ function App() {
   const [file, setFile] = useState();
   const [gifs, setGifs] = useState([])
   const env = process.env.REACT_APP_STAGE;
-  console.log("currently in " + env);
+  
   const getApiUrl = () =>  'https://avl72k250m.execute-api.us-east-1.amazonaws.com/dev';
   const url =env == 'dev'? `http://localhost:8000`: getApiUrl();    
 
   const handleSearch = () => {
-      console.log("searching tags  " + query);
       getGifs();
   }
   const getGifs = () => {
-      const gifsUrl = url + "gifs";
       const options = {
         method: 'GET',
         headers: {accept: 'application/json'},
       }
       const tags = query.split(',');
-      console.log(tags);
+
       var params = new URLSearchParams();
       tags.length == 1 && params.append("name", tags[0]);
       tags.length != 1 && params.append("tags", tags);
       const getGifsUrl = url + "/gifs?" + params;
-      console.log(getGifsUrl)
+
       fetch(getGifsUrl, options)
       .then(response => response.json())
       .then((data) =>{
-        console.log(data)
         const mappedData = data.gifs.map(x => {
           const gif = new GifResponse();
           gif.url = x.image_url.S;
@@ -76,14 +73,10 @@ function App() {
   const fileUploadSubmit = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
-    console.log("validating");
     if (form.checkValidity() === false) {
-    console.log("invalid");
       event.stopPropagation();
     }
     //upload to bucket
-    console.log("name " + name);
-    console.log("file " + file);
     uploadFile();
   }
   const displayGif = (gif) => {
