@@ -46,11 +46,6 @@ function App() {
           gif.name = x.name.S;
           return gif;
         });
-        for(let i = 0; i<10; i++)
-        mappedData.push({
-          name: "musk",
-          url: "https://gifmaker-gifs.s3.amazonaws.com/comment_Yr35Jz1xcvEZQQhwAi9cse5MrNpANIfT.gif"
-        });
         data.gifs ? setGifs(mappedData) : setGifs([]);
       });
   }
