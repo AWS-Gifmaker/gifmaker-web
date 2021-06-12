@@ -25,18 +25,28 @@ html {background-color: #282c34;}
   color: #61dafb;
 }
 .image-card {
-  max-width: 5vw;
+  max-height: 100%;
+  max-width: 100%;
 }
 .image-card-s {
-  max-width: 3vw;
+  max-width: 10vw;
+}
+.container-full{
+  height: 100%;
+  width: 100%;
 }
 .div-center{
   margin: auto;
 }
 
 .image {
-  width: auto;
-  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+.image-details {
+height:200px;
+width: 50%;
+  margin: auto;
 }
 
 @keyframes App-logo-spin {

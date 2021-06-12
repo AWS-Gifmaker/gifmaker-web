@@ -68,11 +68,9 @@ function App() {
         <Card style={{ width: '15rem', height: '15rem' }} >
           <Card.Body>
             <Card.Title>{gif.name}</Card.Title>
-            <div className="container">
-              <div className="col-md-4 px-1 div-center">
-                <div className="image-card div-center">
-                  <Image src={gif.url} fluid />
-                </div>
+            <div className="container container-full">
+              <div className="container-full div-center">
+                <Image src={gif.url} fluid />
               </div>
             </div>
           </Card.Body>
