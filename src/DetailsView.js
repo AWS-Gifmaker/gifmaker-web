@@ -49,8 +49,8 @@ export function DetailsView(props) {
                     <Col> {gifDetails.visits}</Col>
                 </Row>
                 <Row >
-                    <div className="image-card div-center">
-                        <Image src={gifDetails?.url} fluid />
+                    <div className="image-details div-center image-card">
+                        <img className="image" src={gifDetails.url} />
                     </div>
                 </Row>
             </>
