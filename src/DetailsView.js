@@ -25,11 +25,11 @@ export function DetailsView(props) {
             .then((data) => {
                 if (data) {
                     const mappedData = {
-                        url: data.image_url.S,
-                        name: data.name.S,
-                        key: data.key.S,
-                        tags: data.tags.SS,
-                        visits: data.visits.N
+                        url: data?.image_url?.S,
+                        name: data?.name?.S,
+                        key: data?.key?.S,
+                        tags: data?.tags?.SS,
+                        visits: data?.visits?.N
                     };
                     setGifDetails(mappedData);
                 }

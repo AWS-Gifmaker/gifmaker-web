@@ -39,21 +39,21 @@ function App() {
 
     var params = new URLSearchParams();
     byName && params.append("name", query);
-    !byName && params.append("tags", tags);
+    !byName && params.append("tags", query);
     const getGifsUrl = url + "/gifs?" + params;
 
     setLoading(true);
     fetch(getGifsUrl, options)
       .then(response => response.json())
       .then((data) => {
-        const mappedData = data.gifs.map(x => {
+        const mappedData = data?.gifs?.map(x => {
           const gif = new GifResponse();
-          gif.url = x.image_url.S;
-          gif.name = x.name.S;
-          gif.key = x.key.S;
+          gif.url = x.image_url?.S;
+          gif.name = x.name?.S;
+          gif.key = x.key?.S;
           return gif;
         });
-        data.gifs ? setGifs(mappedData) : setGifs([]);
+        data?.gifs ? setGifs(mappedData) : setGifs([]);
       }).finally(() => setLoading(false));
   }
   const showDetails = (gif) => {
