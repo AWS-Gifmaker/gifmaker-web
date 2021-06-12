@@ -59,9 +59,9 @@ function App() {
     setSelectedGif(gif);
     setModalShow(true);
   }
-  const displayGif = (gif) => {
+  const displayGif = (gif, i) => {
     return gif ?
-      <Col sm={3} key="{gif.name}" className="row-elem">
+      <Col sm={3} key={i} className="row-elem">
         <Card style={{ width: '15rem', height: '15rem', marginBotton: "20px" }} >
           <Card.Body>
             <Card.Title>{gif.name}</Card.Title>
@@ -93,7 +93,7 @@ function App() {
         </Jumbotron>
         <Jumbotron>
           <Row>
-            {gifs.map(x => displayGif(x))}
+            {gifs.map((x, i) => displayGif(x, i))}
           </Row>
         </Jumbotron>
         <DetailsView
