@@ -24,6 +24,20 @@ html {background-color: #282c34;}
 .App-link {
   color: #61dafb;
 }
+.image-card {
+  max-width: 5vw;
+}
+.image-card-s {
+  max-width: 3vw;
+}
+.div-center{
+  margin: auto;
+}
+
+.image {
+  width: auto;
+  display: block;
+}
 
 @keyframes App-logo-spin {
   from {
