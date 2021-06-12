@@ -3,155 +3,112 @@ import Row from 'react-bootstrap/Row'
 import Image from 'react-bootstrap/Image'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
-import InputGroup from 'react-bootstrap/InputGroup'
-import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import Card from 'react-bootstrap/Card'
-import {useState} from 'react'
+import { useState } from 'react'
+import { DetailsView } from './DetailsView'
+import { SearchForm } from './SearchForm'
+import FileUploadForm from './FileUploadForm'
 
 class GifResponse {
   name;
   url;
+  key;
+  visits;
+  tags;
 }
 function App() {
   const [query, setQuery] = useState("");
-  const [name, setName] = useState("");
-  const [file, setFile] = useState();
   const [gifs, setGifs] = useState([])
+  const [selectedGif, setSelectedGif] = useState(null);
+  const [modalShow, setModalShow] = useState(false);
+
   const env = process.env.REACT_APP_STAGE;
-  
-  const getApiUrl = () =>  'https://avl72k250m.execute-api.us-east-1.amazonaws.com/dev';
-  const url =env == 'dev'? `http://localhost:8000`: getApiUrl();    
+
+  const getApiUrl = () => 'https://avl72k250m.execute-api.us-east-1.amazonaws.com/dev';
+  const url = env == 'dev' ? `http://localhost:8000` : getApiUrl();
 
   const handleSearch = () => {
-      getGifs();
+    getGifs();
   }
   const getGifs = () => {
-      const options = {
-        method: 'GET',
-        headers: {accept: 'application/json'},
-      }
-      const tags = query.split(',');
+    const options = {
+      method: 'GET',
+      headers: { accept: 'application/json' },
+    }
+    const tags = query.split(',');
 
-      var params = new URLSearchParams();
-      tags.length == 1 && params.append("name", tags[0]);
-      tags.length != 1 && params.append("tags", tags);
-      const getGifsUrl = url + "/gifs?" + params;
+    var params = new URLSearchParams();
+    tags.length == 1 && params.append("name", tags[0]);
+    tags.length != 1 && params.append("tags", tags);
+    const getGifsUrl = url + "/gifs?" + params;
 
-      fetch(getGifsUrl, options)
+    fetch(getGifsUrl, options)
       .then(response => response.json())
-      .then((data) =>{
+      .then((data) => {
         const mappedData = data.gifs.map(x => {
           const gif = new GifResponse();
           gif.url = x.image_url.S;
           gif.name = x.name.S;
+          gif.key = x.key.S;
           return gif;
         });
         data.gifs ? setGifs(mappedData) : setGifs([]);
       });
   }
-  const uploadFile = () => {
-      const endpointUrl = url + "/gifs?";
-      var params = new URLSearchParams();
-      params.append("name", name);
-      const postUrl = endpointUrl + params;
-
-      var formData = new FormData();
-      formData.append("gif_file", file);
-
-      const options = {
-        method: 'POST',
-        body: formData
-      }
-
-      fetch(postUrl, options)
-      .then(response => response.json())
-      .then((data) => console.log(data));
-  }
-  const fileUploadSubmit = (event) => {
-    const form = event.currentTarget;
-    event.preventDefault();
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-    }
-    //upload to bucket
-    uploadFile();
+  const showDetails = (gif) => {
+    setSelectedGif(gif);
+    setModalShow(true);
   }
   const displayGif = (gif) => {
     console.log(gif);
     return gif ?
-    <Col sm={3}>
-     <Card style={{width: '15rem', height: '15rem' }}>
-      <Card.Body>
-        <Card.Title>{gif.name}</Card.Title>
-        <div className="container">
-          <div className ="col-md-4 px-0">
-        <Image src={gif.url} fluid />
-          </div>
-        </div>
-      </Card.Body>
-      <Card.Link href={gif.url}>gif</Card.Link>
-    </Card>
-    </Col>
-    : null;
+      <Col sm={3} key="{gif.name}">
+        <Card style={{ width: '15rem', height: '15rem' }} >
+          <Card.Body>
+            <Card.Title>{gif.name}</Card.Title>
+            <div className="container">
+              <div className="col-md-4 px-1 div-center">
+                <div className="image-card div-center">
+                  <Image src={gif.url} fluid />
+                </div>
+              </div>
+            </div>
+          </Card.Body>
+          <Card.Footer>
+            <Button onClick={() => showDetails(gif)} >Details</Button>
+          </Card.Footer>
+        </Card>
+      </Col>
+      : null;
   }
-  const isValidForm = file && name;
+
   return (
-  <div className="app">
-    <Container className="p-3">
+    <div className="app">
+      <Container className="p-3">
         <Jumbotron>
           <h3 className="App-header">
             Upload video and convert it to gif:
           </h3>
-        <Form onSubmit={fileUploadSubmit} validated={ file && name} >
-            <Form.Group as={Row} className="mb-3">
-              <Form.Label column sm="2">
-                Video
-              </Form.Label>
-              <Col sm="10">
-              <Form.File 
-              id="image_file"
-              onChange={(e) => setFile(e.target.files[0])}
-              style={{marginTop: 10}}
-              accept="video/mp4,video/x-m4v,video/*" />
-              </Col>
-             </Form.Group>
-             <Form.Group as={Row} className="mb-3">
-              <Form.Label column sm="2">
-                Name
-              </Form.Label>
-              <Col sm="10">
-              <Form.Control type="text" placeholder="" value={name} onChange={(e) => setName(e.target.value)} />
-              </Col>
-             </Form.Group>
-             <Button disabled={!isValidForm} variant="primary" type="submit">Convert</Button>
-        </Form>
+          <FileUploadForm url={url} />
         </Jumbotron>
         <Jumbotron>
-          <h3 className="App-header">
-            Search for gifs:
-          </h3>
-          <InputGroup className="mb-3">
-           <FormControl
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="comma separated tags..."
-            aria-label="comma separated tags..."
-            aria-describedby="basic-addon1"/>
-           <InputGroup.Append>
-              <Button variant="primary" onClick={handleSearch}>Search</Button>
-           </InputGroup.Append>
-          </InputGroup>
+          <SearchForm query={query} handleSearch={handleSearch} setQuery={setQuery} />
         </Jumbotron>
         <Jumbotron>
           <Row>
-            {gifs.map(x=> displayGif(x))}
+            {gifs.map(x => displayGif(x))}
           </Row>
         </Jumbotron>
-    </Container>
-</div>
+        <DetailsView
+          gif={selectedGif}
+          url={url}
+          show={modalShow}
+          onHide={() => setModalShow(false)} />
+
+      </Container>
+    </div>
   );
 }
 
