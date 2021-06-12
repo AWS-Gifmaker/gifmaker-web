@@ -2,10 +2,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
 import { useState } from 'react';
 
 export default function FileUploadForm(props) {
     const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
     const [file, setFile] = useState();
     const isValidForm = file && name;
 
@@ -22,10 +24,10 @@ export default function FileUploadForm(props) {
             method: 'POST',
             body: formData
         };
-
+        setLoading(true);
         fetch(postUrl, options)
             .then(response => response.json())
-            .then((data) => console.log(data));
+            .finally(() => setLoading(false));
     };
     const fileUploadSubmit = (event) => {
         const form = event.currentTarget;
@@ -58,7 +60,20 @@ export default function FileUploadForm(props) {
                     <Form.Control type="text" placeholder="" value={name} onChange={(e) => setName(e.target.value)} />
                 </Col>
             </Form.Group>
-            <Button disabled={!isValidForm} variant="primary" type="submit">Convert</Button>
+            <Button disabled={!isValidForm || loading} variant="primary" type="submit">
+                {loading ? <>
+                    <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"></Spinner>
+                    Convert
+                    </>
+                    :
+                    <span>Convert</span>
+                }
+            </Button>
         </Form>
     );
 }

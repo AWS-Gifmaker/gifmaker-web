@@ -23,16 +23,14 @@ function App() {
   const [gifs, setGifs] = useState([])
   const [selectedGif, setSelectedGif] = useState(null);
   const [modalShow, setModalShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const env = process.env.REACT_APP_STAGE;
 
   const getApiUrl = () => 'https://avl72k250m.execute-api.us-east-1.amazonaws.com/dev';
   const url = env == 'dev' ? `http://localhost:8000` : getApiUrl();
 
-  const handleSearch = () => {
-    getGifs();
-  }
-  const getGifs = () => {
+  const getGifs = (byName) => {
     const options = {
       method: 'GET',
       headers: { accept: 'application/json' },
@@ -40,10 +38,11 @@ function App() {
     const tags = query.split(',');
 
     var params = new URLSearchParams();
-    tags.length == 1 && params.append("name", tags[0]);
-    tags.length != 1 && params.append("tags", tags);
+    byName && params.append("name", query);
+    !byName && params.append("tags", tags);
     const getGifsUrl = url + "/gifs?" + params;
 
+    setLoading(true);
     fetch(getGifsUrl, options)
       .then(response => response.json())
       .then((data) => {
@@ -55,14 +54,13 @@ function App() {
           return gif;
         });
         data.gifs ? setGifs(mappedData) : setGifs([]);
-      });
+      }).finally(() => setLoading(false));
   }
   const showDetails = (gif) => {
     setSelectedGif(gif);
     setModalShow(true);
   }
   const displayGif = (gif) => {
-    console.log(gif);
     return gif ?
       <Col sm={3} key="{gif.name}">
         <Card style={{ width: '15rem', height: '15rem' }} >
@@ -92,7 +90,7 @@ function App() {
           <FileUploadForm url={url} />
         </Jumbotron>
         <Jumbotron>
-          <SearchForm query={query} handleSearch={handleSearch} setQuery={setQuery} />
+          <SearchForm loading={loading} query={query} handleSearch={getGifs} setQuery={setQuery} />
         </Jumbotron>
         <Jumbotron>
           <Row>

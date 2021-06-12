@@ -38,7 +38,11 @@ html {background-color: #282c34;}
 .div-center{
   margin: auto;
 }
-
+.label-div{
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
 .image {
   max-width: 100%;
   max-height: 100%;
