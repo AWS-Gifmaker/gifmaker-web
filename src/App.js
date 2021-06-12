@@ -30,19 +30,22 @@ function App() {
   const getApiUrl = () => 'https://avl72k250m.execute-api.us-east-1.amazonaws.com/dev';
   const url = env == 'dev' ? `http://localhost:8000` : getApiUrl();
 
-  const getGifs = (byName) => {
+  const getGifs = (byName, topGifs = false) => {
     const options = {
       method: 'GET',
       headers: { accept: 'application/json' },
     }
-
-    var params = new URLSearchParams();
-    byName && params.append("name", query);
-    !byName && params.append("tags", query);
-    const getGifsUrl = url + "/gifs?" + params;
-
+    let getUrl = url;
+    if (topGifs) {
+      getUrl = url + '/top-gifs/overall';
+    } else {
+      var params = new URLSearchParams();
+      byName && params.append("name", query);
+      !byName && params.append("tags", query);
+      getUrl = url + "/gifs?" + params;
+    }
     setLoading(true);
-    fetch(getGifsUrl, options)
+    fetch(getUrl, options)
       .then(response => response.json())
       .then((data) => {
         const mappedData = data?.gifs?.map(x => {
