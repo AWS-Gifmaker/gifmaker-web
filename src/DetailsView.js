@@ -42,13 +42,17 @@ export function DetailsView(props) {
             <>
                 <Row>
                     <Col><h3>tags:</h3> </Col>
-                    <Col> {gifDetails.tags?.join(", ")}</Col>
+                    <Col><div className="label-div"> {gifDetails.tags?.join(", ")}</div></Col>
                 </Row>
                 <Row>
                     <Col><h3>visits: </h3></Col>
-                    <Col> {gifDetails.visits}</Col>
+                    <Col ><div className="label-div" >{gifDetails.visits}</div></Col>
                 </Row>
-                <Row >
+                <Row>
+                    <Col><h3>gif link: </h3></Col>
+                    <Col > <div className="label-div" ><a href={gifDetails.url}>url</a></div></Col>
+                </Row>
+                <Row style={{ marginTop: '20px' }}>
                     <div className="image-details div-center image-card">
                         <img className="image" src={gifDetails.url} />
                     </div>
