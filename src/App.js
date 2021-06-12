@@ -1,9 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
-import {Row,Image, Col,Container, InputGroup, FormControl, Button, Form, FormGroup, Jumbotron, Card} from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Row from 'react-bootstrap/Row'
+import Image from 'react-bootstrap/Image'
+import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import Jumbotron from 'react-bootstrap/Jumbotron'
+import Card from 'react-bootstrap/Card'
 import {useState} from 'react'
-import AWS from 'aws-sdk'
 
 class GifResponse {
   name;
@@ -47,28 +53,22 @@ function App() {
       });
   }
   const uploadFile = () => {
-    var reader = new FileReader();
-    reader.onload = (e) => {
-      if(e.target.readyState != 2) return;
-      if(e.target.error) {
-          alert('Error while reading file');
-          return;
-      }
-      const fileEncoded = e.target.result;
+      const endpointUrl = url + "/gifs?";
+      var params = new URLSearchParams();
+      params.append("name", name);
+      const postUrl = endpointUrl + params;
+
+      var formData = new FormData();
+      formData.append("gif_file", file);
+
       const options = {
         method: 'POST',
-        headers: {'Content-Type': 'application/json', accept: 'application/json'},
-        body: JSON.stringify({
-          name: name,
-          image_file: fileEncoded
-        })
+        body: formData
       }
-      const createGifUrl = url + "/gifs/create";
-      fetch(createGifUrl, options)
+
+      fetch(postUrl, options)
       .then(response => response.json())
       .then((data) => console.log(data));
-    }
-    reader.readAsText(file);
   }
   const fileUploadSubmit = (event) => {
     const form = event.currentTarget;
@@ -86,8 +86,8 @@ function App() {
      <Card style={{width: '15rem', height: '15rem' }}>
       <Card.Body>
         <Card.Title>{gif.name}</Card.Title>
-        <div class="container">
-          <div class ="col-md-4 px-0">
+        <div className="container">
+          <div className ="col-md-4 px-0">
         <Image src={gif.url} fluid />
           </div>
         </div>
