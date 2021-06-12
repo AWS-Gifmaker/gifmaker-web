@@ -38,6 +38,9 @@ html {background-color: #282c34;}
 .div-center{
   margin: auto;
 }
+.row-elem{
+  margin-bottom: 10px;
+}
 .label-div{
   height: 100%;
   display: flex;

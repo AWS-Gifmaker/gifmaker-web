@@ -35,25 +35,24 @@ function App() {
       method: 'GET',
       headers: { accept: 'application/json' },
     }
-    const tags = query.split(',');
 
     var params = new URLSearchParams();
     byName && params.append("name", query);
-    !byName && params.append("tags", tags);
+    !byName && params.append("tags", query);
     const getGifsUrl = url + "/gifs?" + params;
 
     setLoading(true);
     fetch(getGifsUrl, options)
       .then(response => response.json())
       .then((data) => {
-        const mappedData = data.gifs.map(x => {
+        const mappedData = data?.gifs?.map(x => {
           const gif = new GifResponse();
-          gif.url = x.image_url.S;
-          gif.name = x.name.S;
-          gif.key = x.key.S;
+          gif.url = x.image_url?.S;
+          gif.name = x.name?.S;
+          gif.key = x.key?.S;
           return gif;
         });
-        data.gifs ? setGifs(mappedData) : setGifs([]);
+        data?.gifs ? setGifs(mappedData) : setGifs([]);
       }).finally(() => setLoading(false));
   }
   const showDetails = (gif) => {
@@ -62,8 +61,8 @@ function App() {
   }
   const displayGif = (gif) => {
     return gif ?
-      <Col sm={3} key="{gif.name}">
-        <Card style={{ width: '15rem', height: '15rem' }} >
+      <Col sm={3} key="{gif.name}" className="row-elem">
+        <Card style={{ width: '15rem', height: '15rem', marginBotton: "20px" }} >
           <Card.Body>
             <Card.Title>{gif.name}</Card.Title>
             <div className="container container-full">
