@@ -35,7 +35,6 @@ function App() {
       method: 'GET',
       headers: { accept: 'application/json' },
     }
-    const tags = query.split(',');
 
     var params = new URLSearchParams();
     byName && params.append("name", query);
@@ -62,8 +61,8 @@ function App() {
   }
   const displayGif = (gif) => {
     return gif ?
-      <Col sm={3} key="{gif.name}">
-        <Card style={{ width: '15rem', height: '15rem' }} >
+      <Col sm={3} key="{gif.name}" className="row-elem">
+        <Card style={{ width: '15rem', height: '15rem', marginBotton: "20px" }} >
           <Card.Body>
             <Card.Title>{gif.name}</Card.Title>
             <div className="container container-full">
