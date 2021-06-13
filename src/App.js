@@ -27,7 +27,7 @@ function App() {
 
   const env = process.env.REACT_APP_STAGE;
 
-  const getApiUrl = () => 'https://avl72k250m.execute-api.us-east-1.amazonaws.com/prod';
+  const getApiUrl = () => 'https://avl72k250m.execute-api.us-east-1.amazonaws.com/dev';
   const url = env == 'dev' ? `http://localhost:8000` : getApiUrl();
 
   const getGifs = (byName, topGifs = false) => {
